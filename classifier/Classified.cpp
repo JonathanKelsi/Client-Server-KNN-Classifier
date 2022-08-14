@@ -1,4 +1,5 @@
 #include "Classified.h"
+#include "Algorithms.h"
 
 Classified::Classified() {
     m_handle = "";
@@ -25,4 +26,31 @@ const std::vector<double>& Classified::data() const {
 void Classified::handle(std::string handle) {
     m_handle = std::move(handle);
 }
+
+std::string Classified::ClassifiedToLine(const Classified& classified) {
+    //TODO: Katzav
+    return std::string();
+}
+
+std::unique_ptr<Classified> Classified::fromLine(const std::string& line) {
+    std::vector<std::string> attributes = split(line, ',');
+    auto size = attributes.size();
+
+    std::string handle = attributes[size - 1];
+    std::vector<double> vData;
+
+    if (isDouble(handle)) {
+        // If no handle was given, the entire line is consisted of the data
+        size++;
+        handle = "";
+    }
+
+    for (int i = 0; i < size - 1; ++i) {
+        vData.push_back(std::stod(attributes[i]));
+    }
+
+    std::unique_ptr<Classified> uniquePtr(new Classified(handle, vData));
+    return std::move(uniquePtr);
+}
+
 

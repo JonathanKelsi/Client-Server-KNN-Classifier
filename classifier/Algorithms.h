@@ -62,6 +62,12 @@ double len(const std::vector<double>& v);
 // Other utility functions
 
 /**
+ * @param str a string
+ * @return whether the string is a valid double
+ */
+bool isDouble(const std::string& str);
+
+/**
  * find the key of the maximum value of a map
  * @param map a map between strings and integers
  * @return the key with the maximum value

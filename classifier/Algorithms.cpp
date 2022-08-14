@@ -1,6 +1,7 @@
 #include "Algorithms.h"
 #include <random>
 #include <stdexcept>
+#include <cmath>
 
 // Vector utility functions
 
@@ -67,6 +68,12 @@ double len(const std::vector<double>& v) {
 
 // Other utility functions
 
+bool isDouble(const std::string& str) {
+    char* end = nullptr;
+    double val = strtod(str.c_str(), &end);
+    return end != str.c_str() && *end == '\0' && val != HUGE_VAL;
+}
+
 std::string maxKey(const std::map<std::string, int>& map) {
     auto handleIterator = map.begin();
     std::string mostCommonString;
@@ -122,6 +129,7 @@ void swap(std::pair<double,int>& p1, std::pair<double,int>& p2) {
 }
 
 // Algorithms
+
 static int partition(std::vector<std::pair<double,int>>& v, int left, int right, int pivot) {
     double pivotVal = v[pivot].first;
 
@@ -183,6 +191,8 @@ std::vector<int> kSmallestElements(const std::vector<double>& v, int k) {
 
     // Use the quickSelect algorithm to find the k-th smallest element, and partition the vector accordingly.
     quickSelect(valuesAndIndices, 0, size - 1, k);
+        // If no handle was given, the entire line is consisted of the data
+        size++;
 
     // Find the indices of the k-th smallest elements
     std::vector<int> indices;

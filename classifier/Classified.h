@@ -2,6 +2,7 @@
 #define Classified_H
 #include <vector>
 #include <string>
+#include <memory>
 
 /**
  * This class represents an object that is classified by the KNN Classifier.
@@ -46,18 +47,18 @@ public:
     void handle(std::string handle);
 
     /**
-     * Given a classified object represented in a CSV format, return the object.
-     * @param csvRep the classified object in a CSV format
-     * @return the classified object
-     */
-    static Classified csvToClassified(std::string csvRep);
-
-    /**
      * Given a classified object, return it's CSV representation.
      * @param classified a classified object
      * @return the object's CSV representation
      */
-    static std::string ClassifiedToCsv(const Classified& classified);
+    std::string ClassifiedToLine(const Classified& classified);
+
+    /**
+     * Given a classified object represented in a CSV format, return a pointer to the object.
+     * @param line the classified object in a CSV format
+     * @return the classified object
+     */
+    static std::unique_ptr<Classified> fromLine(const std::string& line);
 };
 
 #endif
