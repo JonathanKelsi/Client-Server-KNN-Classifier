@@ -12,20 +12,26 @@ private:
     int m_k;
     bool m_isInit;
 
-    /**
-     * Given unclassified data, and a distance metric, this method uses
-     * the KNN algorithm to classify the object.
-     * @param unclassified an unclassified object.
-     * @param distance a distance metric
-     */
-    void classify(Classified& unclassified, const Distance& metric) const;
-
 public:
     /**
      * Constructor.
      * @param k the parameter used in the KNN algorithm
      */
     Classifier(int k);
+
+    /**
+     * Given unclassified data and a distance metric, this method uses
+     * the KNN algorithm to classify the object.
+     * @param unclassified an unclassified object.
+     * @param distance a distance metric
+     */
+    void classify(Classified& unclassified, const Distance& metric) const;
+
+    /**
+     * Add classified data to m_classifiedData.
+     * @param classified a unique pointer to classified data
+     */
+    void addClassifiedData(std::unique_ptr<Classified>& classified);
 
     /**
      * Initialize the classified data the KNN algorithm will utilise.
@@ -39,7 +45,7 @@ public:
      * @param dataPath the path to the unclassified data
      * @param outputPath the desired output path
      */
-    void write(const std::string& dataPath, const std::string& outputPath);
+    void write(const std::string& dataPath, const std::string& outputPath) const;
 };
 
 #endif

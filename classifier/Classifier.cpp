@@ -9,33 +9,6 @@
 
 Classifier::Classifier(int k) : m_isInit(false), m_k(k) {}
 
-void Classifier::init(const std::string& dataPath) {
-    // Read from given csv files and create classified objects
-    std::string line;
-    std::ifstream inFile(dataPath);
-
-    // Iterate through the csv file lines
-    while (std::getline(inFile, line)) {
-        // Read the columns and gather the classified object's data
-        std::vector<std::string> columns = split(line, ',');
-        auto size = columns.size();
-
-        std::string handle = columns[size - 1];
-        std::vector<double> vData;
-
-        for (int i = 0; i < size - 1; ++i) {
-            vData.push_back(std::stod(columns[i]));
-        }
-
-        std::unique_ptr<Classified> uniquePtr(new Classified(handle, vData));
-        m_classifiedData.push_back(std::move(uniquePtr));
-    }
-
-    // Close the stream, and update the initialization has completed
-    inFile.close();
-    m_isInit = true;
-}
-
 void Classifier::classify(Classified& unclassified, const Distance& metric) const {
     if (!m_isInit) {
         throw std::runtime_error("Classifier uninitialized");
@@ -67,7 +40,38 @@ void Classifier::classify(Classified& unclassified, const Distance& metric) cons
     unclassified.handle(maxKey(map));
 }
 
-void Classifier::write(const std::string& dataPath, const std::string& outputPath) {
+void Classifier::addClassifiedData(std::unique_ptr<Classified>& classified) {
+    m_classifiedData.push_back(std::move(classified));
+}
+
+void Classifier::init(const std::string& dataPath) {
+    // Read from given csv files and create classified objects
+    std::string line;
+    std::ifstream inFile(dataPath);
+
+    // Iterate through the csv file lines
+    while (std::getline(inFile, line)) {
+        // Read the columns and gather the classified object's data
+        std::vector<std::string> columns = split(line, ',');
+        auto size = columns.size();
+
+        std::string handle = columns[size - 1];
+        std::vector<double> vData;
+
+        for (int i = 0; i < size - 1; ++i) {
+            vData.push_back(std::stod(columns[i]));
+        }
+
+        std::unique_ptr<Classified> uniquePtr(new Classified(handle, vData));
+        m_classifiedData.push_back(std::move(uniquePtr));
+    }
+
+    // Close the stream, and update the initialization has completed
+    inFile.close();
+    m_isInit = true;
+}
+
+void Classifier::write(const std::string& dataPath, const std::string& outputPath) const {
     if (!m_isInit) {
         throw std::runtime_error("Classifier uninitialized");
     }

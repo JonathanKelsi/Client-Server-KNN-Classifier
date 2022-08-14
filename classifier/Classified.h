@@ -43,7 +43,7 @@ public:
     /**
      * handle setter
      */
-     void handle(std::string handle);
+    void handle(std::string handle);
 };
 
 #endif

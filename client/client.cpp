@@ -12,14 +12,18 @@
 using namespace std;
 
 int main() {
+    // Server constants
     const char* ip_address = "127.0.0.1";
     const int port_no = 5555;
 
+    // Creating a socket
     int sock = socket(AF_INET, SOCK_STREAM, 0);
+
     if (sock < 0) {
         perror("error creating socket");
     }
 
+    // Connecting to the server
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
@@ -29,6 +33,8 @@ int main() {
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
         perror("error connecting to server");
     }
+
+    // Communication with the server
 
     char data_addr[] = "HELLO SERVER";
     int data_len = strlen(data_addr);
@@ -41,6 +47,7 @@ int main() {
     char buffer[4096];
     int expected_data_len = sizeof(buffer);
     int read_bytes = recv(sock, buffer, expected_data_len, 0);
+
     if (read_bytes == 0) {
         // connection is closed
     }
@@ -52,7 +59,6 @@ int main() {
     }
 
     close(sock);
-
 
     return 0;
 }
