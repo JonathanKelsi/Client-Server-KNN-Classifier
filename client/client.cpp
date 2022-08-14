@@ -8,10 +8,12 @@
 #endif
 #include <unistd.h>
 #include <string.h>
+#include <fstream>
+#include <memory>
 
 using namespace std;
 
-int main() {
+int main(int argc, char* argv[]) {
     // Server constants
     const char* ip_address = "127.0.0.1";
     const int port_no = 5555;
@@ -20,7 +22,7 @@ int main() {
     int sock = socket(AF_INET, SOCK_STREAM, 0);
 
     if (sock < 0) {
-        perror("error creating socket");
+        perror("Error creating socket");
     }
 
     // Connecting to the server
@@ -31,34 +33,38 @@ int main() {
     sin.sin_port = htons(port_no);
 
     if (connect(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
-        perror("error connecting to server");
+        perror("Error connecting to server");
     }
 
     // Communication with the server
-
-    char data_addr[] = "HELLO SERVER";
-    int data_len = strlen(data_addr);
-    int sent_bytes = send(sock, data_addr, data_len, 0);
-
-    if (sent_bytes < 0) {
-        // error
-    }
-
-    char buffer[4096];
+    std::string line;
+    std::ifstream inFile(argv[1]);
+    std::ofstream ostream(argv[2]);
+    char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
-    int read_bytes = recv(sock, buffer, expected_data_len, 0);
 
-    if (read_bytes == 0) {
-        // connection is closed
-    }
-    else if (read_bytes < 0) {
-        // error
-    }
-    else {
-        cout << "From the server: " << buffer << std::endl;
+    while (std::getline(inFile, line)) {
+        // Send the unclassified data to the server
+        int sent_bytes = send(sock, line.c_str(), line.size(), 0);
+
+        if (sent_bytes < 0) {
+            perror("Error communicating with the server");
+        }
+
+        // Receive the classification
+        int read_bytes = recv(sock, buffer, expected_data_len, 0);
+
+        if (read_bytes == 0) {
+            break;
+        } else if (read_bytes < 0) {
+            perror("Error communicating with the server");
+        }
+        else {
+            // Print to output file
+            ostream << buffer << std::endl;
+        }
     }
 
     close(sock);
-
     return 0;
 }
