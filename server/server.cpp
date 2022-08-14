@@ -1,7 +1,11 @@
 #include <iostream>
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <sys/socket.h>
-#include <stdio.h>
 #include <netinet/in.h>
+#endif
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 
