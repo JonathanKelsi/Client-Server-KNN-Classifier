@@ -44,6 +44,20 @@ public:
      * handle setter
      */
     void handle(std::string handle);
+
+    /**
+     * Given a classified object represented in a CSV format, return the object.
+     * @param csvRep the classified object in a CSV format
+     * @return the classified object
+     */
+    static Classified csvToClassified(std::string csvRep);
+
+    /**
+     * Given a classified object, return it's CSV representation.
+     * @param classified a classified object
+     * @return the object's CSV representation
+     */
+    static std::string ClassifiedToCsv(const Classified& classified);
 };
 
 #endif
