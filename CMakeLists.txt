@@ -11,6 +11,8 @@ set(PROJECT_HEADERS
     "classifier/Algorithms.h"
     "classifier/distance/ChebyshevDistance.h"
     "classifier/Classifier.h"
+    "client/client.cpp"
+    "server/server.cpp"
     )
 
 set(PROJECT_SOURCES
