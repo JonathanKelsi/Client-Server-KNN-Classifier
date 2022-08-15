@@ -8,13 +8,15 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include <memory>
+#include "../classifier/Classifier.h"
+#include "../classifier/Classified.h"
+#include "../classifier/distance/Distance.h"
+#include "../classifier/distance/EuclideanDistance.h"
 
-using namespace std;
-
-int main() {
+int main(int argc, char* argv[]) {
 
     const int server_port = 5555;
-
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("error creating socket");
@@ -35,32 +37,36 @@ int main() {
     }
 
     struct sockaddr_in client_sin;
-    unsigned int addr_len = sizeof(client_sin);
+    //maybe change to unsigned int
+    int addr_len = sizeof(client_sin);
     int client_sock = accept(sock,  (struct sockaddr *) &client_sin,  &addr_len);
 
     if (client_sock < 0) {
         perror("error accepting client");
     }
 
-    char buffer[4096];
+    char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
-    int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
-    if (read_bytes == 0) {
-        // connection is closed
-    }
-    else if (read_bytes < 0) {
-        // error
-    }
-    else {
-        cout << "From the client: " << buffer << std::endl;
-    }
+    int read_bytes = 0;
+    Distance* metric = new EuclideanDistance();
+    int k = std::stoi(argv[2]);
+    std::unique_ptr<Classifier> classifier(new Classifier(k));
+    classifier->init(argv[1]);
+    while (read_bytes = recv(client_sock, buffer, expected_data_len, 0)) {
+        if (read_bytes == 0) {
+            // connection is closed
+        } else if (read_bytes < 0) {
+            // error
+        } else {
+            std::unique_ptr<Classified> classified_data = std::move(Classified::fromLine(buffer));
+            classifier->classify(*classified_data, *metric);
+            int sent_bytes = send(client_sock, classified_data->handle().c_str(), classified_data->handle().size(), 0);
+            if (sent_bytes < 0) {
+                perror("error sending to client");
+            }
+        }
 
-    int sent_bytes = send(client_sock, "HELLO CLIENT", 12, 0);
-
-    if (sent_bytes < 0) {
-        perror("error sending to client");
     }
-
     close(sock);
 
 
