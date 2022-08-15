@@ -10,18 +10,18 @@
 #include <string.h>
 #include <memory>
 #include "../classifier/Classifier.h"
-#include "../classifier/Classified.h"
-#include "../classifier/distance/Distance.h"
 #include "../classifier/distance/EuclideanDistance.h"
 
 int main(int argc, char* argv[]) {
-
     const int server_port = 5555;
+
+    // Create a socket for the server
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("error creating socket");
     }
 
+    // Bind the socket
     struct sockaddr_in sin;
     memset(&sin, 0, sizeof(sin));
     sin.sin_family = AF_INET;
@@ -32,43 +32,51 @@ int main(int argc, char* argv[]) {
         perror("error binding socket");
     }
 
+    // Listen to a socket, and accept the client
     if (listen(sock, 5) < 0) {
         perror("error listening to a socket");
     }
 
     struct sockaddr_in client_sin;
-    //maybe change to unsigned int
-    int addr_len = sizeof(client_sin);
+    unsigned int addr_len = sizeof(client_sin);
     int client_sock = accept(sock,  (struct sockaddr *) &client_sin,  &addr_len);
 
     if (client_sock < 0) {
         perror("error accepting client");
     }
 
+    // Communicate with the client
     char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
     int read_bytes = 0;
+
     Distance* metric = new EuclideanDistance();
-    int k = std::stoi(argv[2]);
-    std::unique_ptr<Classifier> classifier(new Classifier(k));
-    classifier->init(argv[1]);
-    while (read_bytes = recv(client_sock, buffer, expected_data_len, 0)) {
+    std::unique_ptr<Classifier> classifier(new Classifier(std::stoi(argv[2])));
+    classifier->initFromFile(argv[1]);
+
+    while (strcmp(buffer, "END") != 0) {
+        // Read the unclassified data
+        read_bytes = recv(client_sock, buffer, expected_data_len, 0);
+
         if (read_bytes == 0) {
-            // connection is closed
+            break;
         } else if (read_bytes < 0) {
-            // error
+            perror("Error communicating with the server");
         } else {
+            // Convert the string to an object, and classify it
             std::unique_ptr<Classified> classified_data = std::move(Classified::fromLine(buffer));
             classifier->classify(*classified_data, *metric);
+
+            // Send the classification to the client
             int sent_bytes = send(client_sock, classified_data->handle().c_str(), classified_data->handle().size(), 0);
             if (sent_bytes < 0) {
                 perror("error sending to client");
             }
         }
-
     }
-    close(sock);
 
+    delete metric;
+    close(sock);
 
     return 0;
 }

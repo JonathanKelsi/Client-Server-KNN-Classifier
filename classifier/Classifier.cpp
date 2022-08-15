@@ -40,15 +40,11 @@ void Classifier::classify(Classified& unclassified, const Distance& metric) cons
     unclassified.handle(maxKey(map));
 }
 
-void Classifier::addClassifiedData(std::unique_ptr<Classified>& classified) {
-    m_classifiedData.push_back(std::move(classified));
-}
-
-void Classifier::init(const std::string& dataPath) {
+void Classifier::initFromFile(const std::string& dataPath) {
     std::string line;
     std::ifstream inFile(dataPath);
 
-    // Iterate through the csv file, and gather the classified object's data
+    // Iterate through the csv file, and gather the classified objects data
     while (std::getline(inFile, line)) {
         m_classifiedData.push_back(Classified::fromLine(line)); //TODO: verify
     }
@@ -57,7 +53,7 @@ void Classifier::init(const std::string& dataPath) {
     m_isInit = true;
 }
 
-void Classifier::write(const std::string& dataPath, const std::string& outputPath) const {
+void Classifier::writeToFile(const std::string& dataPath, const std::string& outputPath) const {
     if (!m_isInit) {
         throw std::runtime_error("Classifier uninitialized");
     }

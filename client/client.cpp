@@ -65,6 +65,9 @@ int main(int argc, char* argv[]) {
         }
     }
 
+    // Inform the server the session is finished, and close the socket
+    send(sock, "END", 4, 0);
     close(sock);
+
     return 0;
 }

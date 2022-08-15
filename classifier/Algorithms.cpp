@@ -84,15 +84,16 @@ std::string maxKey(const std::map<std::string, int>& map) {
             mostCommonString = handleIterator->first;
             maxTimes = handleIterator->second;
         }
+
         handleIterator = std::next(handleIterator);
     }
+
     return mostCommonString;
 }
 
 std::vector<std::string> split(const std::string& str, char delim) {
     std::vector<std::string> subStrings;
     std::string currentSubString;
-    auto size = str.length();
 
     for (char c : str) {
         if (c == delim) {
@@ -172,7 +173,6 @@ static double quickSelect(std::vector<std::pair<double,int>>& v, int left, int r
         return v[right].first;
     }
 
-
     return quickSelect(v, pivot + 1, right, k);
 }
 
@@ -191,8 +191,6 @@ std::vector<int> kSmallestElements(const std::vector<double>& v, int k) {
 
     // Use the quickSelect algorithm to find the k-th smallest element, and partition the vector accordingly.
     quickSelect(valuesAndIndices, 0, size - 1, k);
-        // If no handle was given, the entire line is consisted of the data
-        size++;
 
     // Find the indices of the k-th smallest elements
     std::vector<int> indices;
