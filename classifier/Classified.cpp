@@ -27,11 +27,6 @@ void Classified::handle(std::string handle) {
     m_handle = std::move(handle);
 }
 
-std::string Classified::ClassifiedToLine(const Classified& classified) {
-    //TODO: Katzav
-    return std::string();
-}
-
 std::unique_ptr<Classified> Classified::fromLine(const std::string& line) {
     std::vector<std::string> attributes = split(line, ',');
     auto size = attributes.size();

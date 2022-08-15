@@ -47,13 +47,6 @@ public:
     void handle(std::string handle);
 
     /**
-     * Given a classified object, return it's CSV representation.
-     * @param classified a classified object
-     * @return the object's CSV representation
-     */
-    std::string ClassifiedToLine(const Classified& classified);
-
-    /**
      * Given a classified object represented in a CSV format, return a pointer to the object.
      * @param line the classified object in a CSV format
      * @return the classified object
