@@ -3,6 +3,15 @@ project(KNN-Classifier)
 
 set(CMAKE_CXX_STANDARD 11)
 
+set(PROJECT_SOURCES
+    "classifier/Classified.cpp"
+    "classifier/distance/EuclideanDistance.cpp"
+    "classifier/distance/ManhattanDistance.cpp"
+    "classifier/Algorithms.cpp"
+    "classifier/distance/ChebyshevDistance.cpp"
+    "classifier/Classifier.cpp"
+)
+
 set(PROJECT_HEADERS
     "classifier/Classified.h"
     "classifier/distance/Distance.h"
@@ -11,20 +20,9 @@ set(PROJECT_HEADERS
     "classifier/Algorithms.h"
     "classifier/distance/ChebyshevDistance.h"
     "classifier/Classifier.h"
-    "client/client.cpp"
-    "server/server.cpp"
-    )
+)
 
-set(PROJECT_SOURCES
-    "classifier/Classified.cpp"
-    "classifier/distance/EuclideanDistance.cpp"
-    "classifier/distance/ManhattanDistance.cpp"
-    "classifier/Algorithms.cpp"
-    "classifier/distance/ChebyshevDistance.cpp"
-    "classifier/Classifier.cpp"
-    "main.cpp"
-    )
-
-add_executable(KNN-Classifier ${PROJECT_SOURCES} ${PROJECT_HEADERS})
+add_executable(Server ${PROJECT_SOURCES} ${PROJECT_HEADERS} server/server.cpp)
+add_executable(Client client/client.cpp)
 
 

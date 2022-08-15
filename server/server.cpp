@@ -1,10 +1,5 @@
-#include <iostream>
-#ifdef WIN32
-#include <windows.h>
-#else
 #include <sys/socket.h>
 #include <netinet/in.h>
-#endif
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -51,8 +46,8 @@ int main(int argc, char* argv[]) {
     int read_bytes = 0;
 
     Distance* metric = new EuclideanDistance();
-    std::unique_ptr<Classifier> classifier(new Classifier(std::stoi(argv[2])));
-    classifier->initFromFile(argv[1]);
+    std::unique_ptr<Classifier> classifier(new Classifier(3/**TODO: std::stoi(argv[2])**/));
+    classifier->initFromFile(/**TODO:argv[1]**/"input/classified.csv");
 
     while (strcmp(buffer, "END") != 0) {
         // Read the unclassified data

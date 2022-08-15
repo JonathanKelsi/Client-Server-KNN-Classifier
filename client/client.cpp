@@ -36,9 +36,22 @@ int main(int argc, char* argv[]) {
         perror("Error connecting to server");
     }
 
-    // Communication with the server
-    std::string line;
-    std::ifstream inFile(argv[1]);
+    // Send the unclassified data to the server
+    std::string line, fileContent;
+    std::ifstream inFile(/**argv[1]*/"input/Unclassified.csv");
+
+    while (std::getline(inFile, line)) {
+        fileContent += line;
+    }
+
+    int sent_bytes = send(sock, fileContent.c_str(), fileContent.size(), 0);
+
+    if (sent_bytes < 0) {
+        perror("Error communicating with the server");
+    }
+
+    // Receive the classifications from
+
     std::ofstream ostream(argv[2]);
     char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
@@ -65,8 +78,6 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Inform the server the session is finished, and close the socket
-    send(sock, "END", 4, 0);
     close(sock);
 
     return 0;

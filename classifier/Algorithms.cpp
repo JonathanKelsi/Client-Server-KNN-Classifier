@@ -179,7 +179,7 @@ static double quickSelect(std::vector<std::pair<double,int>>& v, int left, int r
 std::vector<int> kSmallestElements(const std::vector<double>& v, int k) {
     auto size = v.size();
 
-    if (k < 0 || k > size) {
+    if (k <= 0 || k > size) {
         throw std::runtime_error("k out of bounds");
     }
 
