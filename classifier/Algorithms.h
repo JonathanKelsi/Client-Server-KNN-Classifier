@@ -124,4 +124,10 @@ static double quickSelect(std::vector<std::pair<double,int>>& v, int left, int r
  */
 std::vector<int> kSmallestElements(const std::vector<double>& v, int k);
 
+/**
+ * splits a given string to lines.
+ * @return vector of the lines
+ */
+std::vector<std::string> fromParagraphToLines(std::string& str);
+
 #endif

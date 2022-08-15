@@ -1,5 +1,9 @@
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <sys/socket.h>
 #include <netinet/in.h>
+#endif
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -43,34 +47,27 @@ int main(int argc, char* argv[]) {
     // Communicate with the client
     char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
-    int read_bytes = 0;
 
-    Distance* metric = new EuclideanDistance();
-    std::unique_ptr<Classifier> classifier(new Classifier(3/**TODO: std::stoi(argv[2])**/));
-    classifier->initFromFile(/**TODO:argv[1]**/"input/classified.csv");
+    int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
-    while (strcmp(buffer, "END") != 0) {
-        // Read the unclassified data
-        read_bytes = recv(client_sock, buffer, expected_data_len, 0);
+    if (read_bytes <= 0) {
+        perror("Error communicating with the server");
+    } else {
+        Distance* metric = new EuclideanDistance();
+        std::unique_ptr<Classifier> classifier(new Classifier(3/**TODO: std::stoi(argv[2])**/));
+        classifier->initFromFile(/**TODO:argv[1]**/"input/classified.csv");
+        // Convert the string to an object, and classify it
+        std::string res = classifier->classify(buffer, *metric);
 
-        if (read_bytes == 0) {
-            break;
-        } else if (read_bytes < 0) {
-            perror("Error communicating with the server");
-        } else {
-            // Convert the string to an object, and classify it
-            std::unique_ptr<Classified> classified_data = std::move(Classified::fromLine(buffer));
-            classifier->classify(*classified_data, *metric);
-
-            // Send the classification to the client
-            int sent_bytes = send(client_sock, classified_data->handle().c_str(), classified_data->handle().size(), 0);
-            if (sent_bytes < 0) {
-                perror("error sending to client");
-            }
+        // Send the classification to the client
+        int sent_bytes = send(client_sock, res.c_str(), res.size(), 0);
+        if (sent_bytes < 0) {
+            perror("error sending to client");
         }
+        delete metric;
     }
 
-    delete metric;
+
     close(sock);
 
     return 0;

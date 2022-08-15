@@ -21,11 +21,20 @@ public:
 
     /**
      * Given unclassified data and a distance metric, this method uses
-     * the KNN algorithm to classify the object.
-     * @param unclassified an unclassified object.
+     * the KNN algorithm to classify the object
+     * @param unclassified an unclassified object
      * @param distance a distance metric
      */
     void classify(Classified& unclassified, const Distance& metric) const;
+
+    /**
+     * Given unclassified data in a csv format, this method uses
+     * the KNN algorithm to classify the object
+     * @param unclassified an unclassified object
+     * @param distance a distance metric
+     * @return a string in a csv format with the classified data
+     */
+    std::string classify(const std::string& unclassifiedData, const Distance& metric) const;
 
     /**
      * Initialize the classified data the KNN algorithm will utilise, from a CSV file.
