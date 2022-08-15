@@ -1,13 +1,24 @@
 #include "Classifier.h"
 #include "distance/EuclideanDistance.h"
-#include "distance/ChebyshevDistance.h"
-#include "distance/ManhattanDistance.h"
 #include "Algorithms.h"
 #include <map>
 #include <fstream>
 #include <sstream>
 
 Classifier::Classifier(int k) : m_isInit(false), m_k(k) {}
+
+void Classifier::initFromFile(const std::string& dataPath) {
+    std::string line;
+    std::ifstream inFile(dataPath);
+
+    // Iterate through the csv file, and gather the classified objects data
+    while (std::getline(inFile, line)) {
+        m_classifiedData.push_back(Classified::fromLine(line));
+    }
+
+    inFile.close();
+    m_isInit = true;
+}
 
 void Classifier::classify(Classified& unclassified, const Distance& metric) const {
     if (!m_isInit) {
@@ -41,70 +52,14 @@ void Classifier::classify(Classified& unclassified, const Distance& metric) cons
 }
 
 std::string Classifier::classify(const std::string& unclassifiedData, const Distance& metric) const {
+    std::vector<std::string> strings = split(unclassifiedData, '\r');
+    std::string res;
 
-    std::vector<std::string> strings = split(unclassifiedData, '\n');
-
-    std::string res = "";
     for (int i = 0; i < strings.size(); ++i) {
         std::unique_ptr<Classified> unclassified = Classified::fromLine(strings[i]);
         classify(*unclassified, metric);
-        res += unclassified->handle();
-        res += "\n";
+        res += unclassified->handle() + "\r";
     }
+
     return res;
-
-}
-
-void Classifier::initFromFile(const std::string& dataPath) {
-    std::string line;
-    std::ifstream inFile(dataPath);
-
-    // Iterate through the csv file, and gather the classified objects data
-    while (std::getline(inFile, line)) {
-        m_classifiedData.push_back(Classified::fromLine(line)); //TODO: verify
-    }
-
-    inFile.close();
-    m_isInit = true;
-}
-
-void Classifier::writeToFile(const std::string& dataPath, const std::string& outputPath) const {
-    if (!m_isInit) {
-        throw std::runtime_error("Classifier uninitialized");
-    }
-
-    // Create unclassified objects from the unclassified data
-    std::string line;
-    std::ifstream inFile(dataPath);
-    std::vector<std::unique_ptr<Classified>> unclassifiedData;
-
-    while (std::getline(inFile, line)) {
-        unclassifiedData.push_back(Classified::fromLine(line)); //TODO: verify
-    }
-
-    inFile.close();
-
-    // Create a vector of the metrics used
-    std::vector<Distance*> metrics = {new EuclideanDistance(), new ChebyshevDistance(), new ManhattanDistance()};
-    auto numOfDistances = metrics.size();
-
-    //Create vector with the output path names, corresponding to the metrics
-    std::vector<std::string> files = {"euclidean_output.csv", "chebyshev_output.csv", "manhattan_output.csv"};
-
-    // For each distance, print the classifications by the relevant metric
-    auto classificationSize = unclassifiedData.size();
-
-    for (int i = 0; i < numOfDistances; ++i) {
-        std::ofstream ostream(outputPath + "/" + files[i]);
-
-        for (int j = 0; j < classificationSize; ++j) {
-            classify(*unclassifiedData[j], *metrics[i]);
-            ostream << unclassifiedData[j]->handle() << std::endl;
-        }
-
-        ostream.close();
-        delete metrics[i];
-    }
-
-    metrics.clear();
 }

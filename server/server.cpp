@@ -4,15 +4,17 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #endif
-#include <stdio.h>
+#include "../classifier/Classifier.h"
+#include "../classifier/distance/EuclideanDistance.h"
 #include <unistd.h>
 #include <string.h>
 #include <memory>
-#include "../classifier/Classifier.h"
-#include "../classifier/distance/EuclideanDistance.h"
+#include <iostream>
 
 int main(int argc, char* argv[]) {
+    // Server Constants
     const int server_port = 5555;
+    const int k = 5;
 
     // Create a socket for the server
     int sock = socket(AF_INET, SOCK_STREAM, 0);
@@ -31,44 +33,42 @@ int main(int argc, char* argv[]) {
         perror("error binding socket");
     }
 
-    // Listen to a socket, and accept the client
+    // Listen for a connection, and accept the client
     if (listen(sock, 5) < 0) {
         perror("error listening to a socket");
     }
 
     struct sockaddr_in client_sin;
     unsigned int addr_len = sizeof(client_sin);
-    int client_sock = accept(sock,  (struct sockaddr *) &client_sin,  &addr_len);
+    int client_sock = accept(sock,  (struct sockaddr*)& client_sin,  &addr_len);
 
     if (client_sock < 0) {
         perror("error accepting client");
     }
 
-    // Communicate with the client
+    // Receive the unclassified data from the use
     char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
-
     int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
     if (read_bytes <= 0) {
         perror("Error communicating with the server");
-    } else {
-        Distance* metric = new EuclideanDistance();
-        std::unique_ptr<Classifier> classifier(new Classifier(3/**TODO: std::stoi(argv[2])**/));
-        classifier->initFromFile(/**TODO:argv[1]**/"input/classified.csv");
-        // Convert the string to an object, and classify it
-        std::string res = classifier->classify(buffer, *metric);
-
-        // Send the classification to the client
-        int sent_bytes = send(client_sock, res.c_str(), res.size(), 0);
-        if (sent_bytes < 0) {
-            perror("error sending to client");
-        }
-        delete metric;
     }
 
+    // Create a classifier
+    std::unique_ptr<Classifier> classifier(new Classifier(k));
+    classifier->initFromFile("../input/classified.csv");/**TODO:argv[1]**/
+
+    // Classify the data
+    std::unique_ptr<Distance> metric(new EuclideanDistance());
+    std::string res = classifier->classify(buffer, *metric);
+
+    // Send the classifications to the client
+    int sent_bytes = send(client_sock, res.c_str(), res.size(), 0);
+    if (sent_bytes < 0) {
+        perror("error sending to client");
+    }
 
     close(sock);
-
     return 0;
 }

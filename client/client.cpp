@@ -38,11 +38,13 @@ int main(int argc, char* argv[]) {
 
     // Send the unclassified data to the server
     std::string line, fileContent;
-    std::ifstream inFile(/**argv[1]*/"input/Unclassified.csv");
+    std::ifstream inFile("../input/Unclassified.csv"); /**argv[1]*/
 
     while (std::getline(inFile, line)) {
         fileContent += line;
     }
+
+    inFile.close();
 
     int sent_bytes = send(sock, fileContent.c_str(), fileContent.size(), 0);
 
@@ -50,35 +52,19 @@ int main(int argc, char* argv[]) {
         perror("Error communicating with the server");
     }
 
-    // Receive the classifications from
-
-    std::ofstream ostream(argv[2]);
+    // Receive the classifications from the server
     char buffer[4096] = {0};
     int expected_data_len = sizeof(buffer);
+    int read_bytes = recv(sock, buffer, expected_data_len, 0);
 
-    while (std::getline(inFile, line)) {
-        // Send the unclassified data to the server
-        int sent_bytes = send(sock, line.c_str(), line.size(), 0);
-
-        if (sent_bytes < 0) {
-            perror("Error communicating with the server");
-        }
-
-        // Receive the classification
-        int read_bytes = recv(sock, buffer, expected_data_len, 0);
-
-        if (read_bytes == 0) {
-            break;
-        } else if (read_bytes < 0) {
-            perror("Error communicating with the server");
-        }
-        else {
-            // Print to output file
-            ostream << buffer << std::endl;
-        }
+    if (read_bytes < 0) {
+        perror("Error communicating with the server");
     }
 
-    close(sock);
+    // Write the classifications to the desired path
+    std::ofstream ostream("../output/output.csv");/**argv[2]**/
+    ostream << buffer;
 
+    close(sock);
     return 0;
 }
