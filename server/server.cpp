@@ -63,7 +63,7 @@ int main() {
     std::unique_ptr<Distance> metric(new EuclideanDistance());
     std::string res = classifier->classify(buffer, *metric);
 
-    // Send the classifications to the client
+    // Send the classified data to the client
     int sent_bytes = send(client_sock, res.c_str(), res.size(), 0);
     if (sent_bytes < 0) {
         perror("Error sending classifications to the client");
