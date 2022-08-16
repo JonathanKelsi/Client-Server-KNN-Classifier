@@ -35,7 +35,7 @@ std::unique_ptr<Classified> Classified::fromLine(const std::string& line) {
     std::vector<double> vData;
 
     if (isDouble(handle)) {
-        // If no handle was given, the entire line is consisted of the data
+        // If no handle was given, the entire line is consisted of numercial data
         size++;
         handle = "";
     }

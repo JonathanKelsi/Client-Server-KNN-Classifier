@@ -12,10 +12,10 @@
 #include <memory>
 
 int main(int argc, char* argv[]) {
-//    if (argc < 2) {
-//        std::cout << "Usage: ./Client [UNCLASSIFIED-DATA-PATH] [OUTPUT-PATH]" << std::endl;
-//        return 0;
-//    }
+    if (argc < 2) {
+        std::cout << "Usage: ./Client [UNCLASSIFIED-DATA-PATH] [OUTPUT-PATH]" << std::endl;
+        return 0;
+    }
 
     // Server constants
     const char* ip_address = "127.0.0.1";
