@@ -6,12 +6,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #endif
+#include <cstring>
 #include <unistd.h>
-#include <string.h>
 #include <fstream>
 #include <memory>
-
-using namespace std;
 
 int main(int argc, char* argv[]) {
     // Server constants
@@ -62,7 +60,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Write the classifications to the desired path
-    std::ofstream ostream("../output/output.csv");/**argv[2]**/
+    std::ofstream ostream("../output/output.csv"); /**argv[2]**/
     ostream << buffer;
 
     close(sock);

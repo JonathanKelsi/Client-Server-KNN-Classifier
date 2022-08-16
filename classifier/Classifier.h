@@ -36,7 +36,7 @@ public:
     /**
      * Given unclassified data in a csv format, this method uses
      * the KNN algorithm to classify the object
-     * @param unclassified an unclassified object
+     * @param unclassifiedData unclassified data, in a csv format
      * @param distance a distance metric
      * @return a string in a csv format with the classified data
      */

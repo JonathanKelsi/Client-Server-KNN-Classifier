@@ -12,7 +12,7 @@
  * @param v a vector
  * @return the vector reversed
  */
-const std::vector<double> operator-(const std::vector<double>& v);
+std::vector<double> operator-(const std::vector<double>& v);
 
 /**
  * the '+' operator.
@@ -20,7 +20,7 @@ const std::vector<double> operator-(const std::vector<double>& v);
  * @param u another vector
  * @return the sum of the two vectors (u + v)
  */
-const std::vector<double> operator+(const std::vector<double>& v, const std::vector<double>& u);
+std::vector<double> operator+(const std::vector<double>& v, const std::vector<double>& u);
 
 /**
  * the '-' operator.
@@ -28,7 +28,7 @@ const std::vector<double> operator+(const std::vector<double>& v, const std::vec
  * @param u another vector
  * @return the vector's subtraction (u - v)
  */
-const std::vector<double> operator-(const std::vector<double>& u, const std::vector<double>& v);
+std::vector<double> operator-(const std::vector<double>& u, const std::vector<double>& v);
 
 /**
  * the '*' operator.
@@ -36,7 +36,7 @@ const std::vector<double> operator-(const std::vector<double>& u, const std::vec
  * @param v a vector
  * @return the product of the scalar t and v (t * v)
  */
-const std::vector<double> operator*(double t, const std::vector<double>& v);
+std::vector<double> operator*(double t, const std::vector<double>& v);
 
 /**
  * the '*' operator.
@@ -44,7 +44,7 @@ const std::vector<double> operator*(double t, const std::vector<double>& v);
  * @param t a scalar
  * @return the product of the scalar t and v (v * t)
  */
-const std::vector<double> operator*(const std::vector<double>& v, double t);
+std::vector<double> operator*(const std::vector<double>& v, double t);
 
 /**
  * the '/' operator.
@@ -52,7 +52,7 @@ const std::vector<double> operator*(const std::vector<double>& v, double t);
  * @param v a vector
  * @return the vector, multiplied by the inverse of the scalar t (t^-1 * v)
  */
-const std::vector<double> operator/(const std::vector<double>& v, double t);
+std::vector<double> operator/(const std::vector<double>& v, double t);
 
 /**
  * @return the length of the vector

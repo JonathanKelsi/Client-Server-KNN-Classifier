@@ -5,7 +5,7 @@
 
 // Vector utility functions
 
-const std::vector<double> operator-(const std::vector<double>& v) {
+std::vector<double> operator-(const std::vector<double>& v) {
     std::vector<double> res = v;
     auto size = res.size();
 
@@ -16,11 +16,11 @@ const std::vector<double> operator-(const std::vector<double>& v) {
     return res;
 }
 
-const std::vector<double> operator+(const std::vector<double>& v, const std::vector<double>& u) {
+std::vector<double> operator+(const std::vector<double>& v, const std::vector<double>& u) {
     auto size = v.size();
 
     if (size != u.size()) {
-        throw std::invalid_argument("The vectors don't have the same size");
+        throw std::invalid_argument("The vectors aren't of the same dimension");
     }
 
     std::vector<double> res = v;
@@ -32,11 +32,11 @@ const std::vector<double> operator+(const std::vector<double>& v, const std::vec
     return res;
 }
 
-const std::vector<double> operator-(const std::vector<double>& u, const std::vector<double>& v) {
+std::vector<double> operator-(const std::vector<double>& u, const std::vector<double>& v) {
     return v + (-u);
 }
 
-const std::vector<double> operator*(double t, const std::vector<double>& v) {
+std::vector<double> operator*(double t, const std::vector<double>& v) {
     std::vector<double> res = v;
     auto size = res.size();
 
@@ -47,11 +47,11 @@ const std::vector<double> operator*(double t, const std::vector<double>& v) {
     return res;
 }
 
-const std::vector<double> operator*(const std::vector<double>& v, double t) {
+std::vector<double> operator*(const std::vector<double>& v, double t) {
     return t * v;
 }
 
-const std::vector<double> operator/(const std::vector<double>& v, double t) {
+std::vector<double> operator/(const std::vector<double>& v, double t) {
     return v * (1 / t);
 }
 

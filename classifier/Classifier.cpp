@@ -11,7 +11,7 @@ void Classifier::initFromFile(const std::string& dataPath) {
     std::string line;
     std::ifstream inFile(dataPath);
 
-    // Iterate through the csv file, and gather the classified objects data
+    // Iterate through the csv file, and gather the classified objects' data and classifications
     while (std::getline(inFile, line)) {
         m_classifiedData.push_back(Classified::fromLine(line));
     }
@@ -25,12 +25,17 @@ void Classifier::classify(Classified& unclassified, const Distance& metric) cons
         throw std::runtime_error("Classifier uninitialized");
     }
 
-    // Measure the distances from the unclassified vector to the gathered data
+    // Measure the distances from the unclassified data to the points in the dataset
     std::vector<double> distances;
     auto dataSize = m_classifiedData.size();
 
     for (int i = 0; i < dataSize; ++i) {
-        distances.push_back(metric.distance(unclassified.data(), m_classifiedData[i]->data()));
+        try {
+            distances.push_back(metric.distance(unclassified.data(), m_classifiedData[i]->data()));
+        } catch (const std::invalid_argument& ia) {
+            unclassified.handle("");
+            return;
+        }
     }
 
     // Find the K nearest neighbours, and the most common handle among them
@@ -47,7 +52,7 @@ void Classifier::classify(Classified& unclassified, const Distance& metric) cons
         }
     }
 
-    // Classify the object
+    // Give the unclassified object the correct handle
     unclassified.handle(maxKey(map));
 }
 

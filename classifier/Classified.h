@@ -5,7 +5,7 @@
 #include <memory>
 
 /**
- * This class represents an object that is classified by the KNN Classifier.
+ * This class represents a point in a dataset.
  */
 class Classified {
 private:
@@ -20,7 +20,7 @@ public:
 
     /**
      * constructor.
-     * @param handle the handle
+     * @param handle the classification of the object
      * @param data the data
      */
     Classified(std::string handle, std::vector<double>& data);
@@ -47,7 +47,7 @@ public:
     void handle(std::string handle);
 
     /**
-     * Given a classified object represented in a CSV format, return a pointer to the object.
+     * Given a Classified object represented in a CSV format, return a pointer to the object.
      * @param line the classified object in a CSV format
      * @return the classified object
      */
