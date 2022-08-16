@@ -49,6 +49,21 @@ int main() {
     // Receive the unclassified data from the user
     char buffer[512] = {0};
     int expected_data_len = sizeof(buffer);
+    fd_set rfds;
+
+    FD_ZERO(&rfds);
+    FD_SET(sock, &rfds);
+    struct timeval timeval;
+    timeval.tv_sec = 10;
+    timeval.tv_usec = 0;
+    int selectedValue = select(sock + 1 , &rfds, nullptr, nullptr, &timeval);
+    if (selectedValue == -1) {
+        perror("Error receiving information from the socket");
+    } else if (selectedValue == 0) {
+        close(client_sock);
+        close(sock);
+        return 0;
+    }
     int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
     if (read_bytes <= 0) {
