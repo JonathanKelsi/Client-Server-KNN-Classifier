@@ -1,7 +1,7 @@
 # KNN Classifier
 
 This repository implements the  [k-nearest neighbors algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm), 
-using different metrics to classify types new data, based on given data. 
+using different metrics to classify new data, based on given data. 
 
 ## Description
 The classifier receives an integer *k* as an argument, and assumes the existence of
@@ -32,25 +32,25 @@ sudo apt install cmake
 
 Clone the repository:
 ```bash
-git clone 'https://github.com/JonathanKelsi/KNN-Classifier'
+git clone 'https://github.com/JonathanKelsi/Server-Client-KNN-Classifier'
 ```
 
 ### Executing the program
 
-First, create the input and output directories:
-```bash
-mkdir -p input && mkdir -p output
-```
-Inside the *input* directory, place the 
-*Classified.csv*, *Unclassified.csv* files.
-</br>
-
-To run the program, the standard CMake workflow can be used:
+To build the program, the standard CMake workflow can be used:
 ```bash
 mkdir -p build && cd build
 cmake ..
-make 
-./KNN-Classifier <k>
+make -j && make
+```
+
+Running the server can be achieved by:
+```bash
+./Server
+```
+Running the client:
+```bash
+./Client <Unclassified-Data-Path> <Output-Path>
 ```
 
 ## Authors

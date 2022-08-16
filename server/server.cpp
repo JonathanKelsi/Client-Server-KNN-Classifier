@@ -11,7 +11,7 @@
 #include <memory>
 #include <iostream>
 
-int main(int argc, char* argv[]) {
+int main() {
     // Server Constants
     const int server_port = 5555;
     const int k = 5;
@@ -46,8 +46,8 @@ int main(int argc, char* argv[]) {
         perror("error accepting client");
     }
 
-    // Receive the unclassified data from the use
-    char buffer[4096] = {0};
+    // Receive the unclassified data from the user
+    char buffer[512] = {0};
     int expected_data_len = sizeof(buffer);
     int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
 
     // Create a classifier
     std::unique_ptr<Classifier> classifier(new Classifier(k));
-    classifier->initFromFile("../input/classified.csv");/**TODO:argv[1]**/
+    classifier->initFromFile("input/Classified.csv");
 
     // Classify the data
     std::unique_ptr<Distance> metric(new EuclideanDistance());

@@ -12,6 +12,10 @@
 #include <memory>
 
 int main(int argc, char* argv[]) {
+    if (argc < 2) {
+        return -1;
+    }
+
     // Server constants
     const char* ip_address = "127.0.0.1";
     const int port_no = 5555;
@@ -36,10 +40,15 @@ int main(int argc, char* argv[]) {
 
     // Send the unclassified data to the server
     std::string line, fileContent;
-    std::ifstream inFile("../input/Unclassified.csv"); /**argv[1]*/
+    std::ifstream inFile(argv[1]);
 
     while (std::getline(inFile, line)) {
         fileContent += line;
+
+        if (fileContent.size() > 512) {
+            close(sock);
+            return -1;
+        }
     }
 
     inFile.close();
@@ -51,7 +60,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Receive the classifications from the server
-    char buffer[4096] = {0};
+    char buffer[512] = {0};
     int expected_data_len = sizeof(buffer);
     int read_bytes = recv(sock, buffer, expected_data_len, 0);
 
@@ -60,7 +69,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Write the classifications to the desired path
-    std::ofstream ostream("../output/output.csv"); /**argv[2]**/
+    std::ofstream ostream(argv[2]);
     ostream << buffer;
 
     close(sock);
