@@ -14,7 +14,7 @@
 int main(int argc, char* argv[]) {
     if (argc < 2) {
         std::cout << "Usage: ./Client [UNCLASSIFIED-DATA-PATH] [OUTPUT-PATH]" << std::endl;
-        return -1;
+        return 0;
     }
 
     // Server constants
@@ -41,13 +41,13 @@ int main(int argc, char* argv[]) {
 
     // Send the unclassified data to the server
     std::string line, fileContent;
-    std::ifstream inFile(argv[1]);
+    std::ifstream inFile(/**argv[1]**/ "../io/Unclassified.csv");
 
     while (std::getline(inFile, line)) {
-        fileContent += line;
+        fileContent += line + '\n';
 
         if (fileContent.size() > 512) {
-            std::cout << "File Size too big" << std::endl;
+            std::cout << "File Size too big, 512 is the character limit" << std::endl;
             close(sock);
             return -1;
         }
@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Write the classifications to the desired path
-    std::ofstream ostream(argv[2]);
+    std::ofstream ostream(/**argv[2]**/"../io/out");
     ostream << buffer;
 
     close(sock);

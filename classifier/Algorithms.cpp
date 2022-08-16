@@ -69,9 +69,13 @@ double len(const std::vector<double>& v) {
 // Other utility functions
 
 bool isDouble(const std::string& str) {
-    char* end = nullptr;
-    double val = strtod(str.c_str(), &end);
-    return end != str.c_str() && *end == '\0' && val != HUGE_VAL;
+    try {
+        std::stod(str);
+    } catch (const std::invalid_argument& ia) {
+        return false;
+    }
+
+    return true;
 }
 
 std::string maxKey(const std::map<std::string, int>& map) {
