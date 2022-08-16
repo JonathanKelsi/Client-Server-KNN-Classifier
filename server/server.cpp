@@ -19,7 +19,7 @@ int main() {
     // Create a socket for the server
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
-        perror("error creating socket");
+        perror("Error creating socket");
     }
 
     // Bind the socket
@@ -30,12 +30,12 @@ int main() {
     sin.sin_port = htons(server_port);
 
     if (bind(sock, (struct sockaddr *) &sin, sizeof(sin)) < 0) {
-        perror("error binding socket");
+        perror("Error binding socket");
     }
 
     // Listen for a connection, and accept the client
     if (listen(sock, 5) < 0) {
-        perror("error listening to a socket");
+        perror("Error listening to a socket");
     }
 
     struct sockaddr_in client_sin;
@@ -43,7 +43,7 @@ int main() {
     int client_sock = accept(sock,  (struct sockaddr*)& client_sin,  &addr_len);
 
     if (client_sock < 0) {
-        perror("error accepting client");
+        perror("Error accepting client");
     }
 
     // Receive the unclassified data from the user
@@ -57,7 +57,7 @@ int main() {
 
     // Create a classifier
     std::unique_ptr<Classifier> classifier(new Classifier(k));
-    classifier->initFromFile("input/Classified.csv");
+    classifier->initFromFile("../server/Data/Classified.csv");
 
     // Classify the data
     std::unique_ptr<Distance> metric(new EuclideanDistance());
@@ -66,7 +66,7 @@ int main() {
     // Send the classifications to the client
     int sent_bytes = send(client_sock, res.c_str(), res.size(), 0);
     if (sent_bytes < 0) {
-        perror("error sending to client");
+        perror("Error sending classifications to the client");
     }
 
     close(sock);

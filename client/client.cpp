@@ -13,6 +13,7 @@
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
+        std::cout << "Usage: ./Client [UNCLASSIFIED-DATA-PATH] [OUTPUT-PATH]" << std::endl;
         return -1;
     }
 
@@ -46,6 +47,7 @@ int main(int argc, char* argv[]) {
         fileContent += line;
 
         if (fileContent.size() > 512) {
+            std::cout << "File Size too big" << std::endl;
             close(sock);
             return -1;
         }

@@ -50,7 +50,7 @@ Running the server can be achieved by:
 ```
 Running the client:
 ```bash
-./Client <Unclassified-Data-Path> <Output-Path>
+./Client [UNCLASSIFIED-DATA-PATH] [OUTPUT-PATH]
 ```
 
 ## Authors
