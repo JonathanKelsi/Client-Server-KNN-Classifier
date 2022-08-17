@@ -58,7 +58,7 @@ Running the client:
 
 ### Distance
 
-In order get another level of abstraction, we've created
+In order to get another level of abstraction, we've created
 the pure virtual class *Distance*, and gave it some concrete
 subclasses, such as *EuclideanDistance*, *ManhattanDistance*
 and *ChebyshevDistance*.
