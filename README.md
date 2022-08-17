@@ -1,6 +1,7 @@
 # KNN Classifier
 
-This repository implements the  [k-nearest neighbors algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm), 
+This repository provides a server-side and a client-side system that
+implements the  [k-nearest neighbors algorithm](https://en.wikipedia.org/wiki/K-nearest_neighbors_algorithm), 
 using different metrics to classify new data, based on given data. 
 
 ## Description
@@ -59,5 +60,11 @@ Running the client:
 
 ## Acknowledgments
 
-We've relied on [Wikipedia](https://www.wikipedia.org/) in order to better 
-understand and implement some of the algorithms we used.
+In order to better understand C/C++, and implement some of the
+algorithms we used, we've relied on the following sources:
+
+* [Wikipedia](https://www.wikipedia.org/)
+* [Stackoverflow](https://stackoverflow.com/questions)
+* [die.net](https://linux.die.net/)
+* [man7.org](https://man7.org/linux/man-pages/)
+* Hemi Leibowitch and Areal Shtusel

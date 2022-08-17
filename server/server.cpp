@@ -1,13 +1,9 @@
-#ifdef WIN32
-#include <windows.h>
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#endif
 #include "../classifier/Classifier.h"
 #include "../classifier/distance/EuclideanDistance.h"
+#include <netinet/in.h>
+#include <sys/socket.h>
 #include <unistd.h>
-#include <string.h>
+#include <cstring>
 #include <memory>
 #include <iostream>
 
@@ -33,6 +29,12 @@ int main() {
         perror("Error binding socket");
     }
 
+    // Add a timeout mechanism
+    struct timeval timeval;
+    timeval.tv_sec = 10;
+    timeval.tv_usec = 0;
+    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, (const char*)& timeval, sizeof(timeval));
+
     // Listen for a connection, and accept the client
     if (listen(sock, 5) < 0) {
         perror("Error listening to a socket");
@@ -49,21 +51,6 @@ int main() {
     // Receive the unclassified data from the user
     char buffer[512] = {0};
     int expected_data_len = sizeof(buffer);
-    fd_set rfds;
-
-    FD_ZERO(&rfds);
-    FD_SET(sock, &rfds);
-    struct timeval timeval;
-    timeval.tv_sec = 10;
-    timeval.tv_usec = 0;
-    int selectedValue = select(sock + 1 , &rfds, nullptr, nullptr, &timeval);
-    if (selectedValue == -1) {
-        perror("Error receiving information from the socket");
-    } else if (selectedValue == 0) {
-        close(client_sock);
-        close(sock);
-        return 0;
-    }
     int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
 
     if (read_bytes <= 0) {

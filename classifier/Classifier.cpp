@@ -57,11 +57,11 @@ void Classifier::classify(Classified& unclassified, const Distance& metric) cons
 }
 
 std::string Classifier::classify(const std::string& unclassifiedData, const Distance& metric) const {
-    std::vector<std::string> strings = split(unclassifiedData, '\n');
+    std::vector<std::string> lines = split(unclassifiedData, '\n');
     std::string res;
 
-    for (int i = 0; i < strings.size(); ++i) {
-        std::unique_ptr<Classified> unclassified = Classified::fromLine(strings[i]);
+    for (int i = 0; i < lines.size(); ++i) {
+        std::unique_ptr<Classified> unclassified = Classified::fromLine(lines[i]);
         classify(*unclassified, metric);
         res += unclassified->handle() + "\n";
     }
