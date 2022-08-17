@@ -141,7 +141,6 @@ classifications from the server and writes them to the provide
 output path.
 ```mermaid
 graph LR;
-    graph LR;
     connect --> read;
     read --> send;
     send --> recv;
